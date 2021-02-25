@@ -75,6 +75,12 @@
             background: linear-gradient(to left, #ffc107, #28a745, #17a2b8);
         }
 
+        @media (max-width: 1700px) {
+            .sidenav {
+                display: none;
+            }
+        }
+
     </style>
 </head>
 <body class="bg-dark">
@@ -124,7 +130,7 @@
     <!-- fin navbar -->
 
     <!-- SIDEBAR -->
-    <nav class="sidenav d-none d-xl-block col-xl-2 bd-toc" aria-label="Secondary navigation">
+    <nav class="sidenav col-xl-2 bd-toc" aria-label="Secondary navigation">
         <ul class="section-nav">
             <li class="toc-entry toc-h2"><a href="#intro">Intro</a></li>
             <li class="toc-entry toc-h2"><a href="#I.">I. Modélisation d'une BDD</a></li>
@@ -260,7 +266,7 @@
 
         <hr>
 
-        <div id="IV." class="row my-4 bg_light">
+        <div id="IV." class="row my-4 bg-light">
             <h2 class="mb-4 pl-3"><span>IV.</span> Les types de données</h2>
             <p class="pl-3">3 grandes catégories de champs ressortent : les types numériques, chaînes de caractères (texte) et temporels (dates).</p>
             <div class="col-sm-12 col-md-10 my-4 mx-auto">
@@ -357,7 +363,7 @@
 
         <hr>
 
-        <div id="VII." class="row my-4 bg_light">
+        <div id="VII." class="row my-4 bg-light">
             <div class="col-sm-12">
                 <h2 class="mb-4 pl-3"><span>VII.</span> Table de jointure</h2>
                 <p>Une table de jointure permet de faire le lien entre 2 tables.</p>
