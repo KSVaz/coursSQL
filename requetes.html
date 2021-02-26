@@ -553,19 +553,16 @@
             </div>
             <div class="col-sm-12">
                 <ol>
-                    <li>Afficher la profession de l'employé 547 : <code>SELECT prenom, nom, service FROM employes WHERE id_employes=547;</code></li>
-                    <li>Afficher la date d'embauche de Amandine : <code>SELECT date_embauche FROM employes WHERE prenom='amandine';</code></li>
-                    <li>Afficher le nombre de commerciaux : <code>SELECT COUNT(*) AS 'nbr_commerciaux' FROM employes WHERE service='commercial';</code></li>
-                    <li>Afficher le coût des commerciaux sur une année : <code>SELECT SUM(salaire*12) AS 'cout_annuel' FROM employes WHERE service='commercial';</code></li>
-                    <li>Afficher le salaire moyen par service : <code>SELECT service, AVG(salaire) AS 'cout_moyen' FROM employes GROUP BY service;</code> ou en version arrondie : <code>SELECT service, ROUND(AVG(salaire)) AS 'cout_moyen' FROM employes GROUP BY service;</code></li>
-                    <li>Afficher le nombre de recrutements sur l'année 2010 : <code>SELECT COUNT(*) AS 'nbr de recrutement en 2010' FROM employes WHERE date_embauche BETWEEN '2010-01-01' AND '2010-12-31';</code> ou : <code>SELECT COUNT(*) AS 'nbr recrutement en 2010' FROM employes WHERE date_embauche LIKE '2010%';</code></li>
-                    <li>Augmenter le salaire pour chaque employé de 100 euros : <code>UPDATE employes SET salaire=salaire+100;</code></li>
-
-                    <li>Afficher le nombre de services (différents)<code>SELECT service, COUNT(service) FROM employes GROUP BY service;</code> ou : <code>SELECT DISTINCT service FROM employes;</code> ou : <code></code></li>
-
-                    <li>Afficher les informations de l'employé du service commercial gagnant le salaire le plus élevé : <code></code></li>
-
-                    <li> Afficher l'employé ayant été embauché en dernier : <code>SELECT * FROM employes WHERE date_embauche=(SELECT MAX(date_embauche) FROM employes);</code></li>
+                    <li>Afficher la profession de l'employé 547 : <code>SELECT service FROM employes WHERE id_employes=547;</code></li>
+                    <li>Afficher la date d'embauche d'Amandine : <code>SELECT prenom, date_embauche FROM employes WHERE prenom='Amandine';</code></li>
+                    <li>Afficher le nombre de commerciaux : <code>SELECT COUNT(*) AS 'nbr_commerciaux' FROM employes WHERE service ='commercial';</code></li>
+                    <li>Afficher le coût des commerciaux sur une année : <code>SELECT SUM(salaire*12) AS 'salaire_annuel_commercial' FROM employes WHERE service='commercial'</code></li>
+                    <li>Afficher le salaire moyen par service : <code>SELECT AVG(salaire) FROM employes GROUP BY service;</code></li>
+                    <li>Afficher le nombre de recrutement sur l'année 2010 : <code>SELECT date_embauche, COUNT(*) AS 'nbr de recrutement 2010' FROM employes WHERE date_embauche BETWEEN '2010-01-01' AND '2010-12-31' GROUP BY date_embauche;</code> ou <code>SELECT COUNT(*) AS 'nbr de recrutement 2010' FROM employes WHERE date_embauche LIKE '2010%';</code> ou <code>SELECT COUNT(*) as 'nb de recrutement' FROM employes WHERE date_embauche >= '2010-01-01' AND date_embauche <= '2010-12-31';</code></li>
+                    <li>Augmenter le salaire pour chaque employé de 100€ : <code>UPDATE employes SET salaire=salaire+100;</code></li>
+                    <li>Afficher le nombre de service : <code>SELECT COUNT(DISTINCT service) AS 'nombre de services' FROM employes;</code></li>
+                    <li>Afficher les informations de l'employé du service commercial gagnant le salaire le plus élevé : <code>SELECT * FROM employes WHERE service ='commercial' AND salaire=(SELECT MAX(salaire) FROM employes WHERE service='commercial');</code></li>
+                    <li>Afficher l'employé ayant été embauché en dernier : <code>SELECT * FROM employes WHERE date_embauche=(SELECT MAX(date_embauche) FROM employes);</code></li>
                 </ol>
             </div>
          </div><!-- fin row -->
