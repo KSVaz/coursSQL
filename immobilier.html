@@ -497,11 +497,44 @@
                     <li>Affichez le nombre de propriétaires dans la ville de Paris (Alias : Nombre propriétaires parisiens)<code>SELECT COUNT(DISTINCT(logement_personne.idPersonne)) AS 'Nombre de proprio parisiens' FROM logement_personne, logement WHERE logement_personne.idLogement = logement.idLogement AND logement.ville = 'paris'</code></li>
 
 
-                    <li>Affichez les informations des trois premières personnes souhaitant acheter un logement : <code>SELECT personne.*, demande.* FROM personne, demande WHERE personne.idPersonne = demande.idPersonne AND demande.categorie = 'vente' LIMIT 0,3;</code></li>
-                    <li>Affichez le prénom du vendeur pour le logement ayant la référence « 5770 » : <code>SELECT prenom FROM personne WHERE idPersonne = (SELECT idPersonne FROM logement_personne WHERE idLogement=5770);</code></li>
-                    <li>Affichez les prénoms des personnes souhaitant accéder à un logement sur la ville de Lyon : <code>SELECT prenom FROM personne WHERE idPersonne IN (SELECT idPersonne FROM demande WHERE ville='lyon') </code></li>
-                    <li>Affichez les prénoms des personnes souhaitant accéder à un logement en location sur la ville de Paris : <code>SELECT prenom FROM personne WHERE idPersonne IN (SELECT idPersonne FROM demande WHERE ville='paris' AND categorie='location') </code></li>
-                    <li>Affichez les prénoms des personnes souhaitant acheter un logement de la plus grande à la plus petite superficie : <code>SELECT personne.prenom, personne.idPersonne, demande.superficie FROM personne, demande WHERE personne.idPersonne = demande.idPersonne AND categorie='vente' ORDER BY superficie DESC </code></li>
+                    <li>Affichez les informations des trois premières personnes souhaitant acheter un logement :<code>SELECT personne.*, demande.* FROM personne, demande WHERE personne.idPersonne = demande.idPersonne AND demande.categorie = 'vente' LIMIT 0,3;</code></li>
+
+                    <li>Affichez le prénom du vendeur pour le logement ayant la référence « 5770 » : <code>SELECT personne.prenom, logement_personne.idLogement
+                        FROM personne, logement_personne
+                        WHERE personne.idPersonne = logement_personne.idPersonne
+                        AND logement_personne.idLogement = 5770; </code> ou  <code>SELECT prenom FROM personne WHERE idPersonne = (SELECT idPersonne FROM logement_personne WHERE idLogement=5770);</code></li>
+
+                    <li>Affichez les prénoms des personnes souhaitant accéder à un logement sur la ville de Lyon : <code>SELECT prenom FROM personne WHERE idPersonne IN (SELECT idPersonne FROM demande WHERE ville='lyon') </code> ou <code>SELECT personne.prenom
+                        FROM personne, demande
+                        WHERE personne.idPersonne = demande.idPersonne
+                        AND demande.ville = 'lyon';</code></li>
+
+                    <li>Affichez les prénoms des personnes souhaitant accéder à un logement en location sur la ville de Paris : <code>SELECT prenom FROM personne WHERE idPersonne IN (SELECT idPersonne FROM demande WHERE ville='paris' AND categorie='location') </code> ou <code>SELECT personne.prenom
+                        FROM personne, demande
+                        WHERE personne.idPersonne = demande.idPersonne 
+                        AND demande.ville = 'paris' 
+                        AND demande.categorie = 'location';</code></li>
+
+                    <li>Affichez les prénoms des personnes souhaitant acheter un logement de la plus grande à la plus petite superficie : <code>SELECT personne.prenom, personne.idPersonne, demande.superficie FROM personne, demande WHERE personne.idPersonne = demande.idPersonne AND demande.categorie='vente' ORDER BY demande.superficie DESC </code></li>
+
+                    <li>Quel sont les prix finaux proposés par les agences pour la maison à la vente ayant la référence « 5091 » ? (Alias : prix frais d'agence inclus) : <code>SELECT a.nom, (la.frais+l.prix) AS 'prix finaux' FROM agence a, logement_agence la, logement l WHERE a.idAgence = la.idAgence AND l.idLogement = la.idLogement AND la.idLogement = 5091</code></li>
+                    
+                    <li>Indiquez les frais ajoutés par l’agence immobilière pour le logement ayant la référence « 5873 » : <code>SELECT logement_agence.frais, logement_agence.idLogement, logement.prix, (logement.prix + logement_agence.frais)
+                        AS 'prix total'
+                        FROM logement_agence, logement
+                        WHERE logement_agence.idLogement ='5873'
+                        AND logement.idLogement = logement_agence.idLogement</code></li>
+
+                    <li>Si l'ensemble des logements étaient vendus ou loués demain, quel serait le bénéfice généré grâce aux frais d'agence et pour chaque agence (Alias : benefice, classement : par ordre croissant des gains) : <code>SELECT a.nom, SUM(la.frais) AS 'total des frais' FROM agence a, logement_agence la WHERE a.idAgence = la.idAgence GROUP BY a.nom </code></li>
+
+                    <li>Affichez les id des biens en location, les prix, suivis des frais d'agence (classement : dans l'ordre croissant des prix) : <code>SELECT a.nom, l.idLogement, l.prix, la.frais FROM agence a, logement l, logement_agence la WHERE l.idLogement = la.idLogement AND a.idAgence = la.idAgence AND l.categorie = 'location' ORDER BY l.prix ASC</code></li>
+
+                    <li>Quel est le prénom du propriétaire proposant le logement le moins cher à louer ? : <code>SELECT personne.prenom, logement.prix FROM personne, logement, logement_personne WHERE personne.idPersonne = logement_personne.idPersonne AND logement_personne.idLogement = logement.idLogement AND categorie ='location' ORDER BY logement.prix ASC LIMIT 0,1 </code> ou en version imbriquée et MIN : <code>SELECT personne.prenom, logement.prix, logement.idLogement FROM personne, logement, logement_personne WHERE personne.idPersonne = logement_personne.idPersonne AND logement_personne.idLogement = logement.idLogement AND categorie ='location' AND logement.prix = (SELECT MIN(logement.prix) FROM logement) </code> ou <code>SELECT prenom FROM personne WHERE idPersonne 
+                        IN (SELECT idPersonne FROM logement_personne WHERE idLogement 
+                        IN (SELECT idLogement FROM logement WHERE categorie ='location' 
+                        AND prix = (SELECT MIN(prix) FROM logement WHERE categorie='location')));</code></li>
+
+                    <li>Affichez le prénom et la ville où se trouve le logement de chaque propriétaire : <code>SELECT personne.prenom, logement.ville, logement.idLogement FROM personne, logement, logement_personne WHERE personne.idPersonne = logement_personne.idPersonne AND logement_personne.idLogement = logement.idLogement </code></li>
                 </ol>
                
             </div><!-- fin col -->
